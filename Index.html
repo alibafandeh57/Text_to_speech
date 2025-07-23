@@ -1,1 +1,113 @@
+<!DOCTYPE html>
 
+<html lang="fa">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <title>تبدیل متن به صدا آنلاین</title>
+
+</head>
+
+<body style="direction: rtl; font-family: Tahoma, sans-serif; text-align: center; padding: 40px;">
+
+  <h1>تبدیل متن به صدا - آنلاین و ساده</h1>
+
+  <textarea id="text" rows="5" cols="40" placeholder="متن خود را اینجا وارد کنید"></textarea><br><br>
+
+
+
+  <label for="voiceSelect">انتخاب صدا:</label>
+
+  <select id="voiceSelect"></select><br><br>
+
+
+
+  <button onclick="speak()">پخش صدا</button>
+
+
+
+  <script>
+
+    const synth = window.speechSynthesis;
+
+    const voiceSelect = document.getElementById('voiceSelect');
+
+    let voices = [];
+
+
+
+    function populateVoices() {
+
+      voices = synth.getVoices();
+
+
+
+      voiceSelect.innerHTML = '';
+
+      voices.forEach((voice, i) => {
+
+        const option = document.createElement('option');
+
+        option.value = i;
+
+        option.textContent = voice.name + ' (' + voice.lang + ')';
+
+        voiceSelect.appendChild(option);
+
+      });
+
+    }
+
+
+
+    populateVoices();
+
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+
+      speechSynthesis.onvoiceschanged = populateVoices;
+
+    }
+
+
+
+    function speak() {
+
+      if (synth.speaking) {
+
+        alert('صدای در حال پخش است، لطفا صبر کنید.');
+
+        return;
+
+      }
+
+      const textInput = document.getElementById('text').value;
+
+      if (textInput === '') {
+
+        alert('لطفا متن را وارد کنید');
+
+        return;
+
+      }
+
+      const utterThis = new SpeechSynthesisUtterance(textInput);
+
+      const selectedVoice = voices[voiceSelect.value];
+
+      utterThis.voice = selectedVoice;
+
+      utterThis.lang = selectedVoice.lang;
+
+
+
+      synth.speak(utterThis);
+
+    }
+
+  </script>
+
+</body>
+
+</html>
